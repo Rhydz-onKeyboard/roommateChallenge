@@ -19,13 +19,15 @@ class Server {
 
     middlewares(){
         //CORS
-         this.app.use( this.cors() );
+        this.app.use( this.cors() );
 
         //Reading and parsing the body
         this.app.use( this.framework.json() );
 
         //Public directory
         this.app.use( this.framework.static('public') );
+
+        this.app.use( this.handleErrors );
     };
 
     routes(){
@@ -33,8 +35,12 @@ class Server {
         this.app.use( this.roommateGetPath, require('../routes/roommates.routes') );
         this.app.use( this.gastoPath, require('../routes/gastos.routes') );
         this.app.use( this.gastosGetPath, require('../routes/gastos.routes') );
-        //this.app.use( this.mailingPath, require('../routes/mailing.routes') );
     };
+
+    handleErrors( err, req, res, next ){
+        console.log(err);
+        res.status(500).json({ msg: 'An internal server error ocurred' });
+    }
 
     listen(){
         this.app.listen(this.port, () => {

@@ -5,17 +5,25 @@ const Roommate = require('../models/roommate.js');
 
 const roommate = new Roommate(v4, 'roommates', axios);
 
-const addRoommate = async ( req = request, res = response ) => {
-    const newRoommate = await roommate.newRoommate();
-    roommate.addNewItem( newRoommate );
-    res.json({
-        msg: 'Roommate creado con exito'
-    });
+const addRoommate = async ( req = request, res = response, next ) => {
+    try {
+        const newRoommate = await roommate.newRoommate();
+        roommate.addNewItem( newRoommate );
+        res.json({
+            msg: 'Roommate creado con exito'
+        });
+    } catch (err) {
+        next(err);
+    };
 };
 
-const getRoommates = ( req = request, res = response ) => {
-    const roommates = { roommates: roommate.dataBackup };
-    res.json(roommates);
+const getRoommates = ( req = request, res = response, next ) => {
+    try {
+        const roommates = { roommates: roommate.dataBackup };
+        res.json(roommates);
+    } catch (err) {
+        next(err)
+    }
 };
 
 const addGastoRoommate = ( roommateParam, monto ) => {
